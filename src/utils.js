@@ -139,7 +139,7 @@ function andFilters(filters) {
 }
 
 export function isPhrase(text) {
-  return _.isString(text) && !_.isEmpty(text) && text.split(/(\s+)/).length > 1;
+  return isString(text) && !isEmpty(text) && text.split(/(\s+)/).length > 1;
 }
 
 export function boolShould(subqueries) {
@@ -158,7 +158,7 @@ export function getOptionValue(options, optionPath, defaultValue) {
   return defaultValue;
 }
 
-export const utils = {
+export {
   termQuery,
   matchesOneBoolQuery,
   matchAllQuery,
