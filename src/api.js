@@ -127,22 +127,22 @@ function findAllIds(client, index, type) {
 }
 
 function consolidateHit(hit) {
-  const consolidated = _.extend({},
+  const consolidated = Object.assign({},
     hit._source,
     {_id: hit._id}
   );
 
   // if we have calculated values
   if (hit.fields) {
-    _.extend(consolidated, hit.fields);
+    Object.assign(consolidated, hit.fields);
   }
 
   if (hit.sort) {
-    _.extend(consolidated, {_sort: hit.sort});
+    Object.assign(consolidated, {_sort: hit.sort});
   }
 
   if (hit._score) {
-    _.extend(consolidated, {_score: hit._score});
+    Object.assign(consolidated, {_score: hit._score});
   }
 
   return consolidated;
@@ -154,7 +154,7 @@ function isConnectionError(client, err) {
     (err instanceof client.errors.RequestTimeout);
 }
 
-export const api = {
+export {
   createIndex,
   deleteIndex,
   index,

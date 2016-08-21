@@ -1,5 +1,5 @@
 {
-  "name": "elastic-search-utils",
+  "name": "@workpop/elastic-search-utils",
   "version": "0.0.1",
   "description": "Utilities for elastic search",
   "main": "index.js",
