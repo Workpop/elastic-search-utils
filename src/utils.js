@@ -1,4 +1,6 @@
 import { FUZZY_PREFIX_LENGTH } from './enums';
+import { map, isString, isEmpty, isUndefined, get } from 'lodash';
+
 /**
  * Utility function to create a Elasticsearch term query.
  *
@@ -22,7 +24,7 @@ function termQuery(path, value) {
  * @returns {Object}
  */
 function matchesOneBoolQuery(path, values) {
-  const terms = _.map(values, function (value) {
+  const terms = map(values, function (value) {
     return termQuery(path, value);
   });
 
@@ -136,11 +138,11 @@ function andFilters(filters) {
   };
 }
 
-function isPhrase(text) {
+export function isPhrase(text) {
   return _.isString(text) && !_.isEmpty(text) && text.split(/(\s+)/).length > 1;
 }
 
-function boolShould(subqueries) {
+export function boolShould(subqueries) {
   return {
     bool: {
       should: subqueries
@@ -148,10 +150,9 @@ function boolShould(subqueries) {
   };
 }
 
-function getOptionValue(options, optionPath, defaultValue) {
-  const pathFromOptions = options && options[optionPath];
-  if (options && (typeof pathFromOptions !== undefined)) {
-    return pathFromOptions;
+export function getOptionValue(options, optionPath, defaultValue) {
+  if (options && !isUndefined(get(options, optionPath))) {
+    return get(options, optionPath);
   }
 
   return defaultValue;
