@@ -1,7 +1,7 @@
 import { isPhrase, getOptionValue, boolShould, matchAllQuery, andFilters, distanceCalculationScriptField, multiMatch, singleFieldTextQueryWithBoost, phraseMatch, termQuery, matchesOneBoolQuery } from './utils';
 import { DEFAULT_FUZZINESS, NO_FUZZINESS } from './enums';
 
-import { size, map, pairs } from 'lodash';
+import { size, map, toPairs } from 'lodash';
 
 /**
  * Utility functions to help build Elasticsearch search queries
@@ -90,7 +90,7 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
   const fuzzyMatchEnabled = getOptionValue(options, 'fuzzyMatch.enabled', true);
   if (fuzzyMatchEnabled) {
     const fuzzyMatchBoostFactor = getOptionValue(options, 'fuzzyMatch.boostFactor', 1);
-    const shouldSubExpressions = map(pairs(boostMap), function (kv) {
+    const shouldSubExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
       return singleFieldTextQueryWithBoost(
@@ -106,7 +106,7 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
   const exactMatchEnabled = getOptionValue(options, 'exactMatch.enabled', true);
   if (exactMatchEnabled) {
     const exactMatchBoostFactor = getOptionValue(options, 'exactMatch.boostFactor', 2);
-    const shouldExactSubExpressions = map(pairs(boostMap), function (kv) {
+    const shouldExactSubExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
       return singleFieldTextQueryWithBoost(
@@ -122,7 +122,7 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
   const phraseMatchEnabled = getOptionValue(options, 'phraseMatch.enabled', true);
   if (phraseMatchEnabled && isPhrase(textToSearch)) {
     const phraseMatchBoostFactor = getOptionValue(options, 'phraseMatch.boostFactor', 2);
-    const shouldPhraseExpressions = map(pairs(boostMap), function (kv) {
+    const shouldPhraseExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
       return phraseMatch(
@@ -153,7 +153,7 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
 QueryBuilder.prototype.exactPhraseTextSearchWithBoost = function (textToSearch, boostMap, options) {
   let shouldExpressions = [];
   const phraseMatchBoostFactor = getOptionValue(options, 'phraseMatch.boostFactor', 2);
-  const shouldPhraseExpressions = map(pairs(boostMap), function (kv) {
+  const shouldPhraseExpressions = map(toPairs(boostMap), function (kv) {
     const textField = kv[0];
     const boost = kv[1];
     return phraseMatch(
