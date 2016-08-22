@@ -1,8 +1,8 @@
 {
   "name": "@workpop/elastic-search-utils",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Utilities for elastic search",
-  "main": "index.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
@@ -52,6 +52,7 @@
   "author": "Gavin Minami",
   "license": "ISC",
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "elasticsearch": "^11.0.1",
     "lodash": "^4.15.0"
   }
