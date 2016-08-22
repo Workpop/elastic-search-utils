@@ -1,6 +1,6 @@
 import { DefaultPageSize } from './enums';
 
-function createIndex(client, index, mappings) {
+export function createIndex(client, index, mappings) {
   if (typeof index !== String) {
     return new Error('Index must be a string');
   }
@@ -12,7 +12,7 @@ function createIndex(client, index, mappings) {
   return client.indices.create(request)
 }
 
-function deleteIndex(client, index) {
+export function deleteIndex(client, index) {
   if (typeof index !== String) {
     return new Error('Index must be a string');
   }
@@ -23,7 +23,7 @@ function deleteIndex(client, index) {
   return client.indices.delete(request);
 }
 
-function index(client, index, { type, id, body }) {
+export function index(client, index, { type, id, body }) {
   // todo param checks
   const request = {
     index,
@@ -36,7 +36,7 @@ function index(client, index, { type, id, body }) {
 }
 
 
-function update(client, index, { type, id, body }) {
+export function update(client, index, { type, id, body }) {
   // todo param checks
   const request = {
     index,
@@ -48,7 +48,7 @@ function update(client, index, { type, id, body }) {
   return client.update(request);
 }
 
-function updateProperties(client, index, { type, id, properties }) {
+export function updateProperties(client, index, { type, id, properties }) {
   // todo param checks
   const body = {
     doc: properties
@@ -61,7 +61,7 @@ function updateProperties(client, index, { type, id, properties }) {
   });
 }
 
-function deleteItem(client, index, { type, id }) {
+export function deleteItem(client, index, { type, id }) {
   // todo param checks
   const request = {
     index,
@@ -72,7 +72,7 @@ function deleteItem(client, index, { type, id }) {
   return client.delete(request);
 }
 
-function exists(client, index, { type, id }) {
+export function exists(client, index, { type, id }) {
   // todo param checks
   const request = {
     index,
@@ -82,7 +82,7 @@ function exists(client, index, { type, id }) {
   return client.exists(request);
 }
 
-function search(client, index, { type, body, from = 0, size = DefaultPageSize }) {
+export function search(client, index, { type, body, from = 0, size = DefaultPageSize }) {
   // todo param checks
   const request = {
     index,
@@ -94,7 +94,7 @@ function search(client, index, { type, body, from = 0, size = DefaultPageSize })
   return client.search(request);
 }
 
-function findAllIds(client, index, type) {
+export function findAllIds(client, index, type) {
   // todo param checks
   // batch size for each scroll
   const size = 100;
@@ -126,7 +126,7 @@ function findAllIds(client, index, type) {
   });
 }
 
-function consolidateHit(hit) {
+export function consolidateHit(hit) {
   const consolidated = Object.assign({},
     hit._source,
     {_id: hit._id}
@@ -148,23 +148,8 @@ function consolidateHit(hit) {
   return consolidated;
 }
 
-function isConnectionError(client, err) {
+export function isConnectionError(client, err) {
   return (err instanceof client.errors.NoConnections) ||
     (err instanceof client.errors.ConnectionFault) ||
     (err instanceof client.errors.RequestTimeout);
 }
-
-export {
-  createIndex,
-  deleteIndex,
-  index,
-  update,
-  updateProperties,
-  deleteItem,
-  exists,
-  search,
-  findAllIds,
-  consolidateHit,
-  isConnectionError
-};
-
