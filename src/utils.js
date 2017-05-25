@@ -138,11 +138,11 @@ function andFilters(filters) {
   };
 }
 
-export function isPhrase(text) {
+function isPhrase(text) {
   return isString(text) && !isEmpty(text) && text.split(/(\s+)/).length > 1;
 }
 
-export function boolShould(subqueries) {
+function boolShould(subqueries) {
   return {
     bool: {
       should: subqueries
@@ -150,7 +150,7 @@ export function boolShould(subqueries) {
   };
 }
 
-export function getOptionValue(options, optionPath, defaultValue) {
+function getOptionValue(options, optionPath, defaultValue) {
   if (options && !isUndefined(get(options, optionPath))) {
     return get(options, optionPath);
   }
