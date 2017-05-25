@@ -1,6 +1,6 @@
 {
   "name": "@workpop/elastic-search-utils",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Utilities for elastic search",
   "main": "dist/index.js",
   "directories": {
