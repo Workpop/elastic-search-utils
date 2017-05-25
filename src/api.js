@@ -1,7 +1,7 @@
 import { DefaultPageSize } from './enums';
 
 export function createIndex(client, index, mappings) {
-  if (typeof index !== String) {
+  if (typeof index !== 'string') {
     return new Error('Index must be a string');
   }
   const request = {
@@ -12,8 +12,14 @@ export function createIndex(client, index, mappings) {
   return client.indices.create(request)
 }
 
+export function indexExists(client, index) {
+  return client.indices.exists({
+    index,
+  });
+}
+
 export function deleteIndex(client, index) {
-  if (typeof index !== String) {
+  if (typeof index !== 'string') {
     return new Error('Index must be a string');
   }
   const request = {
@@ -21,6 +27,16 @@ export function deleteIndex(client, index) {
   };
   // return a promise
   return client.indices.delete(request);
+}
+
+export function updateTypeMapping(client, index, type, mapping) {
+  return client.indices.putMapping({
+    index,
+    type,
+    body: {
+      properties: mapping,
+    },
+  });
 }
 
 export function index(client, index, { type, id, body }) {

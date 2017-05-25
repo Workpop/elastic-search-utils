@@ -25,6 +25,8 @@ import {
 import {
   createIndex,
   deleteIndex,
+  indexExists,
+  updateTypeMapping,
   index,
   update,
   updateProperties,
@@ -43,6 +45,8 @@ import createESClient from './es-client';
 export {
   createIndex,
   deleteIndex,
+  indexExists,
+  updateTypeMapping,
   index,
   update,
   updateProperties,
