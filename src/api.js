@@ -1,37 +1,37 @@
 import { DefaultPageSize } from './enums';
 
-export function createIndex(client, index, mappings) {
+export function createIndex(client, indexName, mappings) {
   if (typeof index !== 'string') {
     return new Error('Index must be a string');
   }
   const request = {
-    index,
-    body: mappings
+    index: indexName,
+    body: mappings,
   };
   // return a promise
-  return client.indices.create(request)
+  return client.indices.create(request);
 }
 
-export function indexExists(client, index) {
+export function indexExists(client, indexName) {
   return client.indices.exists({
-    index,
+    index: indexName,
   });
 }
 
-export function deleteIndex(client, index) {
-  if (typeof index !== 'string') {
+export function deleteIndex(client, indexName) {
+  if (typeof indexName !== 'string') {
     return new Error('Index must be a string');
   }
   const request = {
-    index
+    index: indexName,
   };
   // return a promise
   return client.indices.delete(request);
 }
 
-export function updateTypeMapping(client, index, type, mapping) {
+export function updateTypeMapping(client, indexName, type, mapping) {
   return client.indices.putMapping({
-    index,
+    index: indexName,
     type,
     body: {
       properties: mapping,
@@ -39,78 +39,78 @@ export function updateTypeMapping(client, index, type, mapping) {
   });
 }
 
-export function index(client, index, { type, id, body }) {
+export function index(client, indexName, { type, id, body }) {
   // todo param checks
   const request = {
-    index,
+    index: indexName,
     type,
     id,
-    body
+    body,
   };
   // return a promise
   return client.index(request);
 }
 
 
-export function update(client, index, { type, id, body }) {
+export function update(client, indexName, { type, id, body }) {
   // todo param checks
   const request = {
-    index,
+    index: indexName,
     type,
     id,
-    body
+    body,
   };
   // return a promise
   return client.update(request);
 }
 
-export function updateProperties(client, index, { type, id, properties }) {
+export function updateProperties(client, indexName, { type, id, properties }) {
   // todo param checks
   const body = {
-    doc: properties
+    doc: properties,
   };
 
-  return update(client, index, {
+  return update(client, indexName, {
     type,
     id,
-    body
+    body,
   });
 }
 
-export function deleteItem(client, index, { type, id }) {
+export function deleteItem(client, indexName, { type, id }) {
   // todo param checks
   const request = {
-    index,
+    index: indexName,
     type,
-    id
+    id,
   };
   // return a promise
   return client.delete(request);
 }
 
-export function exists(client, index, { type, id }) {
+export function exists(client, indexName, { type, id }) {
   // todo param checks
   const request = {
-    index,
+    index: indexName,
     type,
-    id
+    id,
   };
   return client.exists(request);
 }
 
-export function search(client, index, { type, body, from = 0, size = DefaultPageSize }) {
+export function search(client, indexName, { type, body, from = 0, size = DefaultPageSize }) {
   // todo param checks
   const request = {
-    index,
+    index: indexName,
     type,
     body,
     from,
-    size
+    size,
   };
   return client.search(request);
 }
 
-export function findAllIds(client, index, type) {
+export function findAllIds(client, indexName, type) {
   // todo param checks
   // batch size for each scroll
   const size = 100;
@@ -119,18 +119,18 @@ export function findAllIds(client, index, type) {
   // match all documents and only return _id fields
   const body = {
     'query': {
-      'match_all': {}
+      'match_all': {},
     },
-    'fields': []
+    'fields': [],
   };
 
   const request = {
-    index,
+    index: indexName,
     type,
     body,
     size,
     scroll: scrollDuration,
-    search_type: 'scan'
+    search_type: 'scan',
   };
 
 
