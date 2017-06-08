@@ -57,5 +57,12 @@ export {
   consolidateHit,
   isConnectionError,
   QueryBuilder,
-  createESClient
+  createESClient,
+  DefaultPageSize,
+  NO_FUZZINESS,
+  DEFAULT_FUZZINESS,
+  FUZZY_PREFIX_LENGTH,
+  SORT_TYPE_FIELD_ORDER,
+  SORT_TYPE_DISTANCE,
+  SORT_TYPE_SCORING,
 };

@@ -1,7 +1,7 @@
 import { isPhrase, getOptionValue, boolShould, matchAllQuery, andFilters, distanceCalculationScriptField, multiMatch, singleFieldTextQueryWithBoost, phraseMatch, termQuery, matchesOneBoolQuery } from './utils';
 import { DEFAULT_FUZZINESS, NO_FUZZINESS } from './enums';
 
-import { size, map, toPairs } from 'lodash';
+import { get, isEmpty, size, map, toPairs } from 'lodash';
 
 /**
  * Utility functions to help build Elasticsearch search queries
@@ -16,13 +16,20 @@ import { size, map, toPairs } from 'lodash';
  */
 const QueryBuilder = function () {
   this.queries = [];
+  this.sorts = [];
   this.filters = [];
 };
 
 const SortTypes = {
   FieldOrder: {
     applySortToQuery: function (querybuilder, sortParams) {
-      querybuilder.sort = [{[sortParams.sortField]: (sortParams.sortAscending ? 'asc' : 'desc')}];
+      const sortField = get(sortParams, 'sortField');
+      if (isEmpty(sortField)) {
+        throw new Error('sortParams.sortField required for FieldOrder sort');
+      }
+      querybuilder.sorts.push({
+        [sortParams.sortField]: (get(sortParams, 'sortAscending', true) ? 'asc' : 'desc')
+      });
     },
   },
   Distance: {
@@ -31,7 +38,7 @@ const SortTypes = {
       if (origin) {
         const lat = origin[1];
         const lon = origin[0];
-        querybuilder.sort = {
+        querybuilder.sorts.push({
           '_geo_distance': {
             'geo': {
               lat,
@@ -41,7 +48,7 @@ const SortTypes = {
             'unit': 'm',
             'distance_type': 'plane',
           },
-        };
+        });
       }
       return querybuilder;
     },
@@ -302,7 +309,10 @@ QueryBuilder.prototype.build = function () {
       break;
   }
 
-  const sort = this.sort;
+  let sort;
+  if (!isEmpty(this.sorts)) {
+    sort = this.sorts;
+  }
 
   // note fields declaration required when using script_fields or else _source will not be returned
   const q = {
