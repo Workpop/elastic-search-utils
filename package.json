@@ -54,7 +54,7 @@
   "license": "ISC",
   "dependencies": {
     "babel-runtime": "^6.11.6",
-    "elasticsearch": "^12.0.1",
+    "elasticsearch": "^13.2.0",
     "lodash": "^4.15.0"
   }
 }
