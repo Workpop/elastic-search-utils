@@ -1,7 +1,7 @@
+import { get, isEmpty, size, map, toPairs } from 'lodash';
 import { isPhrase, getOptionValue, boolShould, matchAllQuery, andFilters, distanceCalculationScriptField, multiMatch, singleFieldTextQueryWithBoost, phraseMatch, termQuery, matchesOneBoolQuery } from './utils';
 import { DEFAULT_FUZZINESS, NO_FUZZINESS } from './enums';
 
-import { get, isEmpty, size, map, toPairs } from 'lodash';
 
 /**
  * Utility functions to help build Elasticsearch search queries
@@ -28,7 +28,7 @@ const SortTypes = {
         throw new Error('sortParams.sortField required for FieldOrder sort');
       }
       querybuilder.sorts.push({
-        [sortParams.sortField]: (get(sortParams, 'sortAscending', true) ? 'asc' : 'desc')
+        [sortParams.sortField]: (get(sortParams, 'sortAscending', true) ? 'asc' : 'desc'),
       });
     },
   },
@@ -237,6 +237,21 @@ QueryBuilder.prototype.filterGte = function (docPath, value) {
  */
 QueryBuilder.prototype.filterMatchesOne = function (docPath, values) {
   this.filters.push(matchesOneBoolQuery(docPath, values));
+
+  return this;
+}
+
+;
+/**
+ * Adds a must_not bool filter to the filter set
+ * https://www.elastic.co/guide/en/elasticsearch/guide/current/combining-filters.html#bool-filter
+ */
+QueryBuilder.prototype.filterMustNot = function (docPath, value) {
+  this.filters.push({
+    bool: {
+      must_not: termQuery(docPath, value),
+    },
+  });
 
   return this;
 };
