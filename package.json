@@ -14,7 +14,7 @@
     "test": "mocha --require babel-core/register --require babel-polyfill --reporter spec \"test/*.js\""
   },
   "devDependencies": {
-    "@workpop/eslint-config-workpop": "0.0.7",
+    "@workpop/eslint-config-workpop": "0.0.9",
     "babel-cli": "^6.11.4",
     "babel-eslint": "^7.1.0",
     "babel-plugin-transform-class-properties": "^6.11.5",
