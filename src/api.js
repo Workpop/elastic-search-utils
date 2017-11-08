@@ -1,3 +1,4 @@
+import { map, size } from 'lodash';
 import { DefaultPageSize } from './enums';
 
 export function createIndex(client, indexName, mappings) {
@@ -110,10 +111,10 @@ export function search(client, indexName, { type, body, from = 0, size = Default
   return client.search(request);
 }
 
-export function findAllIds(client, indexName, type) {
+export async function findAllIds(client, indexName, type) {
   // todo param checks
   // batch size for each scroll
-  const size = 100;
+  const batchSize = 100;
   const scrollDuration = '1m';
 
   // match all documents and only return _id fields
@@ -128,18 +129,33 @@ export function findAllIds(client, indexName, type) {
     index: indexName,
     type,
     body,
-    size,
+    size: batchSize,
     scroll: scrollDuration,
     search_type: 'scan',
   };
 
 
-  return client.search(request).then((err, data) => {
-    let ids = [];
-    let scrollComplete = false;
+  let response = await client.search(request);
 
-    return ids;
-  });
+  let ids = [];
+  let scrollComplete = false;
+  do {
+    const idsToAppend = map(response.hits.hits, '_id');
+    ids = ids.concat(idsToAppend);
+
+    scrollComplete = ids.length >= response.hits.total;
+    if (!scrollComplete) {
+      response = await client.scroll({
+        scrollId: response._scroll_id,
+        scroll: scrollDuration,
+      });
+      if (size(response.hits.hits) === 0) {
+        scrollComplete = true;
+      }
+    }
+  } while (!scrollComplete);
+
+  return ids;
 }
 
 export function consolidateHit(hit) {
