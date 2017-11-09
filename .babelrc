@@ -4,8 +4,16 @@
     "es2015"
   ],
   "plugins": [
+    "babel-plugin-inline-import",
     "transform-flow-strip-types",
     "transform-object-assign",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "transform-export-extensions",
+    "transform-async-to-generator",
+    "transform-async-generator-functions",
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }]
   ]
 }
