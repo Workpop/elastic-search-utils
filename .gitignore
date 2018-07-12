@@ -4,3 +4,5 @@ coverage
 dist
 .idea/
 .DS_Store
+.eslintcache
+.sw*

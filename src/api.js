@@ -99,14 +99,14 @@ export function exists(client, indexName, { type, id }) {
   return client.exists(request);
 }
 
-export function search(client, indexName, { type, body, from = 0, size = DefaultPageSize }) {
+export function search(client, indexName, { type, body, from = 0, pageSize = DefaultPageSize }) {
   // todo param checks
   const request = {
     index: indexName,
     type,
     body,
     from,
-    size,
+    size: pageSize,
   };
   return client.search(request);
 }
@@ -122,7 +122,7 @@ export async function findAllIds(client, indexName, type) {
     'query': {
       'match_all': {},
     },
-    'fields': [],
+    'stored_fields': [],
   };
 
   const request = {
@@ -131,7 +131,9 @@ export async function findAllIds(client, indexName, type) {
     body,
     size: batchSize,
     scroll: scrollDuration,
-    search_type: 'scan',
+    sort: [
+      '_doc',
+    ],
   };
 
 

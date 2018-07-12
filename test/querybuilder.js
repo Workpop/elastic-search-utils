@@ -3,7 +3,7 @@ import { QueryBuilder, createESClient, SORT_TYPE_FIELD_ORDER } from '../src';
 
 const expect = require('chai').expect;
 
-const esClient = createESClient({
+createESClient({
   host: 'localhost:9200',
 });
 
@@ -15,9 +15,8 @@ describe('Test QueryBuilder', function () {
     const body = qb.build();
 
     expect(body).to.eql({
-      fields: ['_source'],
       query: {
-        filtered: {
+        bool: {
           filter: {
             bool: {
               must: [
@@ -44,7 +43,7 @@ describe('Test QueryBuilder', function () {
               ],
             },
           },
-          query: {
+          must: {
             match_all: {},
           },
         },
@@ -56,7 +55,7 @@ describe('Test QueryBuilder', function () {
   it('querybuilder with one sort missing sort field should throw', function () {
     expect(function () {
       const qb = new QueryBuilder().sortBy({ sortType: SORT_TYPE_FIELD_ORDER });
-      const body = qb.build();
+      qb.build();
     }).to.throw();
   });
 
@@ -68,7 +67,7 @@ describe('Test QueryBuilder', function () {
       },
     });
     const body = qb.build();
-    console.log(JSON.stringify(body));
+    console.log(JSON.stringify(body)); // eslint-disable-line no-console
 
     expect(size(get(body, 'sort'))).to.equal(1);
     const firstSort = get(body, 'sort.0');
@@ -91,7 +90,7 @@ describe('Test QueryBuilder', function () {
         },
       });
     const body = qb.build();
-    console.log(JSON.stringify(body));
+    console.log(JSON.stringify(body));// eslint-disable-line no-console
 
     expect(size(get(body, 'sort'))).to.equal(2);
     const firstSort = get(body, 'sort.0');

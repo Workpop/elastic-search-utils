@@ -329,14 +329,10 @@ QueryBuilder.prototype.build = function () {
     sort = this.sorts;
   }
 
-  // note fields declaration required when using script_fields or else _source will not be returned
   const q = {
-    'fields': [
-      '_source',
-    ],
     query: {
-      filtered: {
-        query,
+      bool: {
+        must: query,
         filter,
       },
     },

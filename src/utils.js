@@ -1,5 +1,5 @@
-import { FUZZY_PREFIX_LENGTH } from './enums';
 import { map, isString, isEmpty, isUndefined, get } from 'lodash';
+import { FUZZY_PREFIX_LENGTH } from './enums';
 
 /**
  * Utility function to create a Elasticsearch term query.
@@ -10,9 +10,9 @@ import { map, isString, isEmpty, isUndefined, get } from 'lodash';
  */
 function termQuery(path, value) {
   return {
-    "term": {
-      [path]: value
-    }
+    term: {
+      [path]: value,
+    },
   };
 }
 
@@ -29,9 +29,9 @@ function matchesOneBoolQuery(path, values) {
   });
 
   return {
-    "bool": {
-      "should": terms
-    }
+    bool: {
+      should: terms,
+    },
   };
 }
 
@@ -42,7 +42,7 @@ function matchesOneBoolQuery(path, values) {
  */
 function matchAllQuery() {
   return {
-    "match_all": {}
+    match_all: {},
   };
 }
 
@@ -62,9 +62,9 @@ function singleFieldTextQueryWithBoost(field, text, boost, fuzziness) {
         query: text,
         boost: boost,
         fuzziness: fuzziness,
-        prefix_length: FUZZY_PREFIX_LENGTH
-      }
-    }
+        prefix_length: FUZZY_PREFIX_LENGTH,
+      },
+    },
   };
 }
 
@@ -82,9 +82,9 @@ function phraseMatch(field, text, boost) {
       [field]: {
         query: text,
         boost: boost,
-        type: "phrase"
-      }
-    }
+        type: 'phrase',
+      },
+    },
   };
 }
 
@@ -98,11 +98,11 @@ function phraseMatch(field, text, boost) {
  */
 function multiMatch(fields, text, fuzziness) {
   return {
-    "multi_match": {
-      "fields": fields,
-      "query": text,
-      "fuzziness": fuzziness
-    }
+    multi_match: {
+      fields: fields,
+      query: text,
+      fuzziness: fuzziness,
+    },
   };
 }
 
@@ -110,15 +110,15 @@ function multiMatch(fields, text, fuzziness) {
 // inline scripting is currently disabled on compose.io elasticsearch instances
 function distanceCalculationScriptField(distanceCalcConfig) {
   return {
-    "script_fields": {
+    script_fields: {
       [distanceCalcConfig.distanceField]: {
-        "params": {
-          "lat": distanceCalcConfig.lat,
-          "lon": distanceCalcConfig.lon
+        params: {
+          lat: distanceCalcConfig.lat,
+          lon: distanceCalcConfig.lon,
         },
-        "script": `doc['${distanceCalcConfig.geoField}'].distance(lat, lon)`
-      }
-    }
+        script: `doc['${distanceCalcConfig.geoField}'].distance(lat, lon)`,
+      },
+    },
   };
 }
 
@@ -132,9 +132,9 @@ function andFilters(filters) {
   return {
     bool: {
       must: [
-        filters
-      ]
-    }
+        filters,
+      ],
+    },
   };
 }
 
@@ -145,8 +145,8 @@ function isPhrase(text) {
 function boolShould(subqueries) {
   return {
     bool: {
-      should: subqueries
-    }
+      should: subqueries,
+    },
   };
 }
 
@@ -169,5 +169,5 @@ export {
   andFilters,
   isPhrase,
   boolShould,
-  getOptionValue
+  getOptionValue,
 };

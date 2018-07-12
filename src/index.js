@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   DefaultPageSize,
   NO_FUZZINESS,
@@ -5,7 +6,7 @@ import {
   FUZZY_PREFIX_LENGTH,
   SORT_TYPE_FIELD_ORDER,
   SORT_TYPE_DISTANCE,
-  SORT_TYPE_SCORING
+  SORT_TYPE_SCORING,
 } from './enums';
 
 import {
@@ -19,7 +20,7 @@ import {
   andFilters,
   isPhrase,
   boolShould,
-  getOptionValue
+  getOptionValue,
 } from './utils';
 
 import {
@@ -35,7 +36,7 @@ import {
   search,
   findAllIds,
   consolidateHit,
-  isConnectionError
+  isConnectionError,
 } from './api';
 
 import QueryBuilder from './query-builder';
