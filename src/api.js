@@ -1,4 +1,4 @@
-import { map, size } from 'lodash';
+import { map, size as sizeLib } from 'lodash';
 import { DefaultPageSize } from './enums';
 
 export function createIndex(client, indexName, mappings) {
@@ -99,14 +99,14 @@ export function exists(client, indexName, { type, id }) {
   return client.exists(request);
 }
 
-export function search(client, indexName, { type, body, from = 0, pageSize = DefaultPageSize }) {
+export function search(client, indexName, { type, body, from = 0, size = DefaultPageSize }) {
   // todo param checks
   const request = {
     index: indexName,
     type,
     body,
     from,
-    size: pageSize,
+    size,
   };
   return client.search(request);
 }
@@ -151,7 +151,7 @@ export async function findAllIds(client, indexName, type) {
         scrollId: response._scroll_id,
         scroll: scrollDuration,
       });
-      if (size(response.hits.hits) === 0) {
+      if (sizeLib(response.hits.hits) === 0) {
         scrollComplete = true;
       }
     }
