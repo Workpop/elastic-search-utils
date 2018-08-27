@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/Workpop/elastic-search-utils/compare/v0.4.2...v0.5.0) (2018-08-27)
+
+
+### Bug Fixes
+
+* **findAll:** pass search body too ([8633d4d](https://github.com/Workpop/elastic-search-utils/commit/8633d4d))
+
+
+### Features
+
+* **ElasticStore:** elastic store ([0605ca7](https://github.com/Workpop/elastic-search-utils/commit/0605ca7))
+
+
+
 <a name="0.4.2"></a>
 ## [0.4.2](https://github.com/Workpop/elastic-search-utils/compare/v0.4.1...v0.4.2) (2018-07-18)
 
