@@ -43,7 +43,10 @@ import QueryBuilder from './query-builder';
 
 import createESClient from './es-client';
 
+import ElasticStore from './ElasticStore';
+
 export {
+  ElasticStore,
   createIndex,
   deleteIndex,
   indexExists,
