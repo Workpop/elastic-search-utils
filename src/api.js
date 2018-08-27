@@ -111,14 +111,14 @@ export function search(client, indexName, { type, body, from = 0, size = Default
   return client.search(request);
 }
 
-export async function findAllIds(client, indexName, type) {
+export async function findAllIds(client, indexName, type, searchBody) {
   // todo param checks
   // batch size for each scroll
   const batchSize = 100;
   const scrollDuration = '1m';
 
   // match all documents and only return _id fields
-  const body = {
+  const body = searchBody || {
     'query': {
       'match_all': {},
     },
