@@ -160,6 +160,19 @@ export default class ElasticStore {
     return await this.esClient.exists(request);
   }
 
+  async rawSearch({ body, from = 0, size = DefaultPageSize }) {
+    // todo param checks
+    const request = {
+      index: this.indexName,
+      type: this.typeName,
+      body,
+      from,
+      size,
+    };
+
+    return await this.esClient.search(request);
+  }
+
   async search({ body, from = 0, size = DefaultPageSize }) {
     // todo param checks
     const request = {
@@ -232,5 +245,17 @@ export default class ElasticStore {
     } while (!scrollComplete);
 
     return ids;
+  }
+
+  async bulk(body) {
+    const request = {
+      index: this.indexName,
+      type: this.typeName,
+      body,
+    };
+
+    this.logger.trace('processing bulk request', JSON.stringify(body));
+
+    return await this.esClient.bulk(request);
   }
 }
