@@ -172,7 +172,10 @@ export default class ElasticStore {
 
     const response = await this.esClient.search(request);
 
-    return map(get(response, 'hits.hits'), this.consolidateHit);
+    return {
+      data: map(get(response, 'hits.hits'), this.consolidateHit),
+      total: get(response, 'hits.total'),
+    };
   }
 
   async findById(id) {

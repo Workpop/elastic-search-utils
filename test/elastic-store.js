@@ -82,7 +82,8 @@ describe('Test ElasticStore', function () {
 
     const docs = await store.search({ body, size: 2 });
 
-    expect(docs.length).to.eql(2);
+    expect(docs.data.length).to.eql(2);
+    expect(docs.total).to.eql(5);
   });
 
   it('updateProperties()', async function () {
