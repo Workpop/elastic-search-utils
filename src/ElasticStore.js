@@ -254,6 +254,8 @@ export default class ElasticStore {
       body,
     };
 
+    this.logger.trace('processing bulk request', JSON.stringify(body));
+
     return await this.esClient.bulk(request);
   }
 }

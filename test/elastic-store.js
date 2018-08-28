@@ -15,26 +15,17 @@ const store = new ElasticStore({
   indexName: 'candidateusers',
 });
 
+const ids = ['16', '17', '18'];
+
 describe('Test ElasticStore', function () {
   before(async () => {
     try {
       await store.createIndex();
-
       expect(await store.indexExists()).to.eql(true);
     } catch (e) {
       // index exists
     }
   });
-
-  // after(async () => {
-  //   try {
-  //     await store.deleteIndex();
-  //
-  //     expect(await store.indexExists()).to.eql(false);
-  //   } catch (e) {
-  //     // index exists
-  //   }
-  // });
 
   it('exists()', async function () {
     await store.unindex('1');
@@ -84,6 +75,45 @@ describe('Test ElasticStore', function () {
 
     expect(docs.data.length).to.eql(2);
     expect(docs.total).to.eql(5);
+  });
+
+  it('rawSearch()', async function () {
+    const queryBuilder = new QueryBuilder();
+    queryBuilder.filterExact('jobId', '1337');
+    const body = queryBuilder.build();
+
+    const docs = await store.rawSearch({ body, size: 2 });
+
+    expect(docs.hits.hits.length).to.eql(2);
+    expect(docs.hits.total).to.eql(5);
+  });
+
+  it('bulk() - index', async function () {
+    await store.index({ _id: '16', name: '16', bulkId: '1337' });
+    await store.index({ _id: '17', name: '17', bulkId: '1337' });
+    await store.index({ _id: '18', name: '18', bulkId: '1337' });
+
+    const queryBuilder = new QueryBuilder();
+    queryBuilder.filterExact('bulkId', '1337');
+    const body = queryBuilder.build();
+
+    const docs = await store.search({ body, size: 2 });
+
+    expect(docs.total).to.eql(3);
+
+    const searchBody = ids.map(
+      (id: string): Object => {
+        return {
+          delete: {
+            _id: id,
+          },
+        };
+      }
+    );
+
+    const result = await store.bulk(searchBody);
+
+    expect(result.items.length).to.eql(3);
   });
 
   it('updateProperties()', async function () {
