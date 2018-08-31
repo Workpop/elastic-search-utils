@@ -1,7 +1,18 @@
 import { get, isEmpty, size, map, toPairs } from 'lodash';
-import { isPhrase, getOptionValue, boolShould, matchAllQuery, andFilters, distanceCalculationScriptField, multiMatch, singleFieldTextQueryWithBoost, phraseMatch, termQuery, matchesOneBoolQuery } from './utils';
+import {
+  isPhrase,
+  getOptionValue,
+  boolShould,
+  matchAllQuery,
+  andFilters,
+  distanceCalculationScriptField,
+  multiMatch,
+  singleFieldTextQueryWithBoost,
+  phraseMatch,
+  termQuery,
+  matchesOneBoolQuery,
+} from './utils';
 import { DEFAULT_FUZZINESS, NO_FUZZINESS } from './enums';
-
 
 /**
  * Utility functions to help build Elasticsearch search queries
@@ -28,7 +39,9 @@ const SortTypes = {
         throw new Error('sortParams.sortField required for FieldOrder sort');
       }
       querybuilder.sorts.push({
-        [sortParams.sortField]: (get(sortParams, 'sortAscending', true) ? 'asc' : 'desc'),
+        [sortParams.sortField]: get(sortParams, 'sortAscending', true)
+          ? 'asc'
+          : 'desc',
       });
     },
   },
@@ -39,14 +52,14 @@ const SortTypes = {
         const lat = origin[1];
         const lon = origin[0];
         querybuilder.sorts.push({
-          '_geo_distance': {
-            'geo': {
+          _geo_distance: {
+            geo: {
               lat,
               lon,
             },
-            'order': 'asc',
-            'unit': 'm',
-            'distance_type': 'plane',
+            order: 'asc',
+            unit: 'm',
+            distance_type: 'plane',
           },
         });
       }
@@ -61,7 +74,6 @@ const SortTypes = {
     },
   },
 };
-
 
 /**
  * Add fuzzy full-text search to the query
@@ -91,12 +103,20 @@ QueryBuilder.prototype.fuzzyTextQuery = function (textToSearch, fieldsToSearch) 
  *   phraseMatch.boostFactor - default = 4
  */
 
-QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, boostMap, options) {
+QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
+  textToSearch,
+  boostMap,
+  options
+) {
   let shouldExpressions = [];
 
   const fuzzyMatchEnabled = getOptionValue(options, 'fuzzyMatch.enabled', true);
   if (fuzzyMatchEnabled) {
-    const fuzzyMatchBoostFactor = getOptionValue(options, 'fuzzyMatch.boostFactor', 1);
+    const fuzzyMatchBoostFactor = getOptionValue(
+      options,
+      'fuzzyMatch.boostFactor',
+      1
+    );
     const shouldSubExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
@@ -107,12 +127,18 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
         DEFAULT_FUZZINESS
       );
     });
-    shouldExpressions = shouldExpressions.concat(boolShould(shouldSubExpressions));
+    shouldExpressions = shouldExpressions.concat(
+      boolShould(shouldSubExpressions)
+    );
   }
 
   const exactMatchEnabled = getOptionValue(options, 'exactMatch.enabled', true);
   if (exactMatchEnabled) {
-    const exactMatchBoostFactor = getOptionValue(options, 'exactMatch.boostFactor', 2);
+    const exactMatchBoostFactor = getOptionValue(
+      options,
+      'exactMatch.boostFactor',
+      2
+    );
     const shouldExactSubExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
@@ -123,12 +149,22 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
         NO_FUZZINESS
       );
     });
-    shouldExpressions = shouldExpressions.concat(boolShould(shouldExactSubExpressions));
+    shouldExpressions = shouldExpressions.concat(
+      boolShould(shouldExactSubExpressions)
+    );
   }
 
-  const phraseMatchEnabled = getOptionValue(options, 'phraseMatch.enabled', true);
+  const phraseMatchEnabled = getOptionValue(
+    options,
+    'phraseMatch.enabled',
+    true
+  );
   if (phraseMatchEnabled && isPhrase(textToSearch)) {
-    const phraseMatchBoostFactor = getOptionValue(options, 'phraseMatch.boostFactor', 2);
+    const phraseMatchBoostFactor = getOptionValue(
+      options,
+      'phraseMatch.boostFactor',
+      2
+    );
     const shouldPhraseExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
       const boost = kv[1];
@@ -138,7 +174,9 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
         boost * phraseMatchBoostFactor
       );
     });
-    shouldExpressions = shouldExpressions.concat(boolShould(shouldPhraseExpressions));
+    shouldExpressions = shouldExpressions.concat(
+      boolShould(shouldPhraseExpressions)
+    );
   }
 
   this.queries.push({
@@ -157,19 +195,25 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (textToSearch, b
  * @param textToSearch {String} - the text to search for
  * @param boostMap {Object} - a map of fields to boost (Integer)
  */
-QueryBuilder.prototype.exactPhraseTextSearchWithBoost = function (textToSearch, boostMap, options) {
+QueryBuilder.prototype.exactPhraseTextSearchWithBoost = function (
+  textToSearch,
+  boostMap,
+  options
+) {
   let shouldExpressions = [];
-  const phraseMatchBoostFactor = getOptionValue(options, 'phraseMatch.boostFactor', 2);
+  const phraseMatchBoostFactor = getOptionValue(
+    options,
+    'phraseMatch.boostFactor',
+    2
+  );
   const shouldPhraseExpressions = map(toPairs(boostMap), function (kv) {
     const textField = kv[0];
     const boost = kv[1];
-    return phraseMatch(
-      textField,
-      textToSearch,
-      boost * phraseMatchBoostFactor
-    );
+    return phraseMatch(textField, textToSearch, boost * phraseMatchBoostFactor);
   });
-  shouldExpressions = shouldExpressions.concat(boolShould(shouldPhraseExpressions));
+  shouldExpressions = shouldExpressions.concat(
+    boolShould(shouldPhraseExpressions)
+  );
   this.queries.push({
     bool: {
       should: shouldExpressions,
@@ -199,15 +243,17 @@ QueryBuilder.prototype.filterExact = function (docPath, value) {
  * @param origin
  * @param distanceMeters
  */
-QueryBuilder.prototype.filterByDistance = function (docPath, origin, distanceMeters) {
-  this.filters.push(
-    {
-      'geo_distance': {
-        'distance': `${distanceMeters}m`,
-        [docPath]: origin,
-      },
-    }
-  );
+QueryBuilder.prototype.filterByDistance = function (
+  docPath,
+  origin,
+  distanceMeters
+) {
+  this.filters.push({
+    geo_distance: {
+      distance: `${distanceMeters}m`,
+      [docPath]: origin,
+    },
+  });
 
   return this;
 };
@@ -220,9 +266,21 @@ QueryBuilder.prototype.filterByDistance = function (docPath, origin, distanceMet
  */
 QueryBuilder.prototype.filterGte = function (docPath, value) {
   this.filters.push({
-    'range': {
+    range: {
       [docPath]: {
-        'gte': value,
+        gte: value,
+      },
+    },
+  });
+
+  return this;
+};
+
+QueryBuilder.prototype.filterLte = function (docPath, value) {
+  this.filters.push({
+    range: {
+      [docPath]: {
+        lte: value,
       },
     },
   });
@@ -239,9 +297,7 @@ QueryBuilder.prototype.filterMatchesOne = function (docPath, values) {
   this.filters.push(matchesOneBoolQuery(docPath, values));
 
   return this;
-}
-
-;
+};
 /**
  * Adds a must_not bool filter to the filter set
  * https://www.elastic.co/guide/en/elasticsearch/guide/current/combining-filters.html#bool-filter
@@ -262,7 +318,8 @@ QueryBuilder.prototype.filterMustNot = function (docPath, value) {
  * the sort params structure looks like {sortType: WPElasticsearch.QueryBuilder.SortTypes.xxx, sortParams: { params }
  */
 QueryBuilder.prototype.sortBy = function (sortDescriptor) {
-  const sortType = sortDescriptor.sortType && SortTypes[sortDescriptor.sortType];
+  const sortType =
+    sortDescriptor.sortType && SortTypes[sortDescriptor.sortType];
   if (sortType) {
     sortType.applySortToQuery(this, sortDescriptor.sortParams);
   }
@@ -278,7 +335,12 @@ QueryBuilder.prototype.sortBy = function (sortDescriptor) {
  * @param lon
  * @param distanceField
  */
-QueryBuilder.prototype.addDistanceCalculation = function (geoField, lat, lon, distanceField) {
+QueryBuilder.prototype.addDistanceCalculation = function (
+  geoField,
+  lat,
+  lon,
+  distanceField
+) {
   this.distanceCalc = {
     geoField,
     lat,
