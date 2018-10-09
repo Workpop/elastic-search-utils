@@ -68,6 +68,17 @@ function singleFieldTextQueryWithBoost(field, text, boost, fuzziness) {
   };
 }
 
+function prefixMatch(field, prefix, boost) {
+  return {
+    prefix: {
+      [field]: {
+        value: prefix,
+        boost,
+      },
+    },
+  };
+}
+
 /**
  * Match text as entire phrase
  *
@@ -165,6 +176,7 @@ export {
   singleFieldTextQueryWithBoost,
   phraseMatch,
   multiMatch,
+  prefixMatch,
   distanceCalculationScriptField,
   andFilters,
   isPhrase,

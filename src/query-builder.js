@@ -9,6 +9,7 @@ import {
   multiMatch,
   singleFieldTextQueryWithBoost,
   phraseMatch,
+  prefixMatch,
   termQuery,
   matchesOneBoolQuery,
 } from './utils';
@@ -101,12 +102,14 @@ QueryBuilder.prototype.fuzzyTextQuery = function (textToSearch, fieldsToSearch) 
  *   exactMatch.boostFactor - default = 2
  *   phraseMatch.enabled - default = true
  *   phraseMatch.boostFactor - default = 4
+ *   prefixMatch.enabled - default = false
+ *   prefixMatch.boostFactor - default = 1
  */
 
 QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
   textToSearch,
   boostMap,
-  options
+  options,
 ) {
   let shouldExpressions = [];
 
@@ -176,6 +179,31 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
     });
     shouldExpressions = shouldExpressions.concat(
       boolShould(shouldPhraseExpressions)
+    );
+  }
+
+  const prefixMatchEnabled = getOptionValue(
+    options,
+    'prefixMatch.enabled',
+    false,
+  );
+  if (prefixMatchEnabled) {
+    const prefixMatchBoostFactor = getOptionValue(
+      options,
+      'prefixMatch.boostFactor',
+      1,
+    );
+    const shouldPrefixExpressions = map(toPairs(boostMap), function (kv) {
+      const textField = kv[0];
+      const boost = kv[1];
+      return prefixMatch(
+        textField,
+        textToSearch,
+        boost * prefixMatchBoostFactor,
+      );
+    });
+    shouldExpressions = shouldExpressions.concat(
+      boolShould(shouldPrefixExpressions)
     );
   }
 
