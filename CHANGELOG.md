@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.7.0"></a>
+# [0.7.0](https://github.com/Workpop/elastic-search-utils/compare/v0.6.2...v0.7.0) (2018-10-10)
+
+
+### Features
+
+* **search:** add prefix matching ([752f1a8](https://github.com/Workpop/elastic-search-utils/commit/752f1a8))
+
+
+
 <a name="0.6.2"></a>
 ## [0.6.2](https://github.com/Workpop/elastic-search-utils/compare/v0.6.1...v0.6.2) (2018-10-09)
 
