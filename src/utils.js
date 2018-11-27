@@ -82,6 +82,9 @@ function prefixMatch(field, prefix, boost) {
 /**
  * Match text as entire phrase
  *
+ * Note: match with type=phrase was deprecated in 5.x and breaks against a 6.x elasticsearch cluster.
+ * Implementation updated to use match_phrase instead.
+ *
  * @param field {String} path of field to search
  * @param text {String} text (phrase) to search for
  * @param boost {Integer} boost for a match
@@ -89,11 +92,10 @@ function prefixMatch(field, prefix, boost) {
  */
 function phraseMatch(field, text, boost) {
   return {
-    match: {
+    match_phrase: {
       [field]: {
         query: text,
         boost: boost,
-        type: 'phrase',
       },
     },
   };
@@ -142,9 +144,7 @@ function distanceCalculationScriptField(distanceCalcConfig) {
 function andFilters(filters) {
   return {
     bool: {
-      must: [
-        filters,
-      ],
+      must: [filters],
     },
   };
 }
