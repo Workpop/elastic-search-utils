@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/Workpop/elastic-search-utils/compare/v0.7.2...v0.8.0) (2018-11-27)
+
+
+### Features
+
+* **terms:** terms query ([12ab3ff](https://github.com/Workpop/elastic-search-utils/commit/12ab3ff))
+* **terms:** terms query ([328ba2c](https://github.com/Workpop/elastic-search-utils/commit/328ba2c))
+
+
+
 <a name="0.7.2"></a>
 ## [0.7.2](https://github.com/Workpop/elastic-search-utils/compare/v0.7.1...v0.7.2) (2018-11-27)
 
