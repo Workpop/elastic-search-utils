@@ -194,6 +194,7 @@ function getOptionValue(options, optionPath, defaultValue) {
 
 export {
   termQuery,
+  termsQuery,
   matchesOneBoolQuery,
   matchAllQuery,
   singleFieldTextQueryWithBoost,
