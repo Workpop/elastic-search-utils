@@ -17,6 +17,21 @@ function termQuery(path, value) {
 }
 
 /**
+ * Utility function to create a Elasticsearch terms query.
+ *
+ * @param path {String} The path whose value to match
+ * @param value {String|Number} The value to match
+ * @returns {Object} The Elasticsearch term query
+ */
+function termsQuery(path, value) {
+  return {
+    terms: {
+      [path]: value,
+    },
+  };
+}
+
+/**
  * Creates an Elasticsearch boolean query to test if the value at the provided path matches one or more values.
  *
  * @param path {String} The path to match in the Elasticsearch document
