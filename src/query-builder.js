@@ -11,6 +11,7 @@ import {
   phraseMatch,
   prefixMatch,
   termQuery,
+  termsQuery,
   matchesOneBoolQuery,
 } from './utils';
 import { DEFAULT_FUZZINESS, NO_FUZZINESS } from './enums';
@@ -247,6 +248,19 @@ QueryBuilder.prototype.exactPhraseTextSearchWithBoost = function (
       should: shouldExpressions,
     },
   });
+
+  return this;
+};
+
+/**
+ * Exact match filter.
+ *
+ * @param docPath
+ * @param value
+ * @returns {WPElasticsearch.QueryBuilder}
+ */
+QueryBuilder.prototype.filterTerms = function (docPath, value) {
+  this.filters.push(termsQuery(docPath, value));
 
   return this;
 };
