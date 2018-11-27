@@ -340,6 +340,17 @@ QueryBuilder.prototype.filterMatchesOne = function (docPath, values) {
 
   return this;
 };
+
+QueryBuilder.prototype.filterMust = function (docPath, value) {
+  this.filters.push({
+    bool: {
+      must: termsQuery(docPath, value),
+    },
+  });
+
+  return this;
+};
+
 /**
  * Adds a must_not bool filter to the filter set
  * https://www.elastic.co/guide/en/elasticsearch/guide/current/combining-filters.html#bool-filter

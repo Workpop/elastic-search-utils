@@ -176,6 +176,14 @@ function boolShould(subqueries) {
   };
 }
 
+function boolMust(subqueries) {
+  return {
+    bool: {
+      must: subqueries,
+    },
+  };
+}
+
 function getOptionValue(options, optionPath, defaultValue) {
   if (options && !isUndefined(get(options, optionPath))) {
     return get(options, optionPath);
