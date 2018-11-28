@@ -1,5 +1,6 @@
 import { map, isString, isEmpty, isUndefined, get } from 'lodash';
 import { FUZZY_PREFIX_LENGTH } from './enums';
+import { isArray } from 'util';
 
 /**
  * Utility function to create a Elasticsearch term query.

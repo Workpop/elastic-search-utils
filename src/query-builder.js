@@ -110,7 +110,7 @@ QueryBuilder.prototype.fuzzyTextQuery = function (textToSearch, fieldsToSearch) 
 QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
   textToSearch,
   boostMap,
-  options,
+  options
 ) {
   let shouldExpressions = [];
 
@@ -186,13 +186,13 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
   const prefixMatchEnabled = getOptionValue(
     options,
     'prefixMatch.enabled',
-    false,
+    false
   );
   if (prefixMatchEnabled) {
     const prefixMatchBoostFactor = getOptionValue(
       options,
       'prefixMatch.boostFactor',
-      1,
+      1
     );
     const shouldPrefixExpressions = map(toPairs(boostMap), function (kv) {
       const textField = kv[0];
@@ -200,7 +200,7 @@ QueryBuilder.prototype.multiFieldTextSearchWithBoost = function (
       return prefixMatch(
         textField,
         textToSearch,
-        boost * prefixMatchBoostFactor,
+        boost * prefixMatchBoostFactor
       );
     });
     shouldExpressions = shouldExpressions.concat(

@@ -8,6 +8,43 @@ createESClient({
 });
 
 describe('Test QueryBuilder', function () {
+  it('filterMust', function () {
+    const appAggQuery = new QueryBuilder().filterMust('application.jobId', [
+      '1',
+      '2',
+    ]);
+
+    appAggQuery.filterMust('application.status', 1);
+
+    const query = appAggQuery.build();
+
+    const test = {
+      query: {
+        bool: {
+          must: { match_all: {} },
+          filter: {
+            bool: {
+              must: [
+                [
+                  {
+                    bool: {
+                      must: {
+                        terms: { 'application.jobId': ['1', '2'] },
+                      },
+                    },
+                  },
+                  { bool: { must: { terms: { 'application.status': 1 } } } },
+                ],
+              ],
+            },
+          },
+        },
+      },
+      sort: undefined,
+    };
+
+    expect(query).to.eql(test);
+  });
   it('querybuilder must not', function () {
     const qb = new QueryBuilder()
       .filterMustNot('hasAttachments', true)
@@ -90,7 +127,7 @@ describe('Test QueryBuilder', function () {
         },
       });
     const body = qb.build();
-    console.log(JSON.stringify(body));// eslint-disable-line no-console
+    console.log(JSON.stringify(body)); // eslint-disable-line no-console
 
     expect(size(get(body, 'sort'))).to.equal(2);
     const firstSort = get(body, 'sort.0');

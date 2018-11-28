@@ -11,7 +11,7 @@
     "lint": "eslint ./src",
     "prepublish": "babel ./src --ignore test --out-dir ./dist",
     "release": "standard-version",
-    "test": "mocha --require babel-core/register --require babel-polyfill --reporter spec \"test/*.js\""
+    "test": "mocha --require babel-core/register --require babel-polyfill --reporter spec \"test/querybuilder.js\""
   },
   "devDependencies": {
     "@workpop/eslint-config-workpop": "0.0.7",
